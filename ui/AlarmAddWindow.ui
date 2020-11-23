@@ -87,15 +87,36 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="secondLineLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>일정 날짜</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateEdit" name="AlarmDate">
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="thridLineLayout">
+       <item>
+        <widget class="QLabel" name="AlarmTuneLabel">
          <property name="text">
           <string>알림음</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="AlarmTune">
          <property name="text">
           <string>알림음 설정</string>
          </property>
@@ -115,7 +136,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="AlarmTuneInfo">
          <property name="text">
           <string>DefaultAlarm.wav</string>
          </property>
@@ -124,7 +145,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="LineLayout" stretch="0,0">
+      <layout class="QHBoxLayout" name="fourthLineLayout_2" stretch="0,0">
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -133,7 +154,41 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="textEdit"/>
+        <widget class="QTextEdit" name="AlarmDescription"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="fifthLineLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addButton">
+         <property name="text">
+          <string>추가</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeButton">
+         <property name="text">
+          <string>취소</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
