@@ -18,8 +18,11 @@ class AlarmAddWindow(QMainWindow, UI):
         self.addButton.clicked.connect(self.addBtnClicked)
 
     def addBtnClicked(self):
-        print(self.AlarmTime.time().toString())
-        print(self.AlarmDate.date().toString())
+        time = self.AlarmTime.time()
+        date = self.AlarmDate.date()
+
+        print(f"{time.hour()}:{time.minute()}:{time.second()}")
+        print(f"{date.year()}-{date.month()}-{date.day()}")
 
 
 if __name__ == '__main__':
