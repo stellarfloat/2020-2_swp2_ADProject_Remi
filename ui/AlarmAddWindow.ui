@@ -81,7 +81,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QTimeEdit" name="AlarmTime"/>
+        <widget class="QTimeEdit" name="AlarmTime">
+         <property name="displayFormat">
+          <string>AP HH:mm</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -99,6 +103,12 @@
        </item>
        <item>
         <widget class="QDateEdit" name="AlarmDate">
+         <property name="minimumSize">
+          <size>
+           <width>90</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="calendarPopup">
           <bool>true</bool>
          </property>
@@ -116,6 +126,29 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>시간대</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="AlarmTimezone">
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>+0900</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
