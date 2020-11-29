@@ -16,8 +16,18 @@ class Schedule:
         """
         return int(time.mktime(self.time))
 
+    def set_time(self, ptime: str, date: str, timezone: str = time.strftime("%z")):
+        """
+        Set Schedule time (with Timezone)
+        :param ptime: "H:M:S"
+        :param date: "Y-M-D"
+        :param timezone: "+-HHMM"
+        :return:
+        """
+        self.time = get_time(ptime, date, timezone)
+
     def __repr__(self):
-        return f"Schedule({self.name}, {self.description}, {self.time}, {self.tune})"
+        return f"Schedule({self.name}, {self.description}, {self.get_timestamp()}, {self.tune})"
 
 
 class ScheduleGenerator:
@@ -74,9 +84,7 @@ class ScheduleGenerator:
         :param timezone: "+-HHMM"
         :return:
         """
-        ftime = time.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
-
-        self.time = ftime
+        self.time = get_time(ptime, date, timezone)
 
         return self
 
@@ -87,6 +95,17 @@ class ScheduleGenerator:
         :return: Schedule with configurable fields
         """
         return Schedule(self.name, self.time, self.description, self.tune)
+
+
+def get_time(ptime: str, date: str, timezone: str = time.strftime("%z")):
+        """
+        Set Schedule time (with Timezone)
+        :param ptime: "H:M:S"
+        :param date: "Y-M-D"
+        :param timezone: "+-HHMM"
+        :return:
+        """
+        return time.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
 
 
 if __name__ == '__main__':
