@@ -200,7 +200,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="AlarmDescription"/>
+        <widget class="QPlainTextEdit" name="AlarmDescription"/>
        </item>
       </layout>
      </item>
