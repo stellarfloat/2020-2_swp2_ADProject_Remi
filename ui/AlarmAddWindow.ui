@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>AlarmAddWindow</class>
- <widget class="QMainWindow" name="AlarmAddWindow">
+ <widget class="QDialog" name="AlarmAddWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>600</height>
+    <height>570</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>570</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>일정 추가/수정</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>570</height>
+    </rect>
+   </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -24,6 +38,9 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="MainLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
      <property name="leftMargin">
       <number>10</number>
      </property>
@@ -230,7 +247,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="removeButton">
+        <widget class="QPushButton" name="cancelButton">
          <property name="text">
           <string>취소</string>
          </property>
@@ -241,7 +258,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

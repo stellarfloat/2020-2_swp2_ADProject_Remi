@@ -13,20 +13,25 @@ UI = uic.loadUiType("./ui/AlarmAddWindow.ui")[0]
 TZRegExp = re.compile(r"^((?:\+|\-)\d{2}\d{2})$")
 
 
-class AlarmAddWindow(QMainWindow, UI):
-    def __init__(self, schedule=None):
+class AlarmAddWindow(QDialog, UI):
+    def __init__(self, parent=None, schedule=None):
         """
         AlarmAddWindow Class
         :param schedule: if open this window as Schedule edit mode, you can pass Schedule object to this parameters
         """
-        super().__init__()
+        super(AlarmAddWindow, self).__init__(parent)
+
         self.setupUi(self)
+
+        self.parent = parent
 
         self.AlarmTime.setTime(QTime.currentTime())
         self.AlarmDate.setDate(QDate.currentDate())
 
         self.addButton.clicked.connect(self.add_btn_clicked)
+        self.cancelButton.clicked.connect(self.cancel_btn_clicked)
         self.AlarmTune.clicked.connect(self.tune_btn_clicked)
+        self.tune = ""
 
         if schedule is not None:
             self.name = schedule.name
@@ -51,40 +56,45 @@ class AlarmAddWindow(QMainWindow, UI):
 
             self.AlarmDescription.setPlainText(self.description)
 
-
+    def cancel_btn_clicked(self):
+        self.close()
 
     def add_btn_clicked(self):
-        time = self.AlarmTime.time()
-        date = self.AlarmDate.date()
+        try:
+            time = self.AlarmTime.time()
+            date = self.AlarmDate.date()
 
-        self.time_str = time.toString("HH:mm:ss")
-        self.date_str = date.toString("Y-M-d")
+            self.time_str = time.toString("HH:mm:ss")
+            self.date_str = date.toString("Y-M-d")
 
-        self.description = self.AlarmDescription.toPlainText()
+            self.description = self.AlarmDescription.toPlainText()
 
-        self.name = self.AlarmName.text()
+            self.name = self.AlarmName.text()
 
-        self.timezone = self.AlarmTimezone.text()
+            self.timezone = self.AlarmTimezone.text()
 
-        print(self.name, self.time_str, self.date_str, self.tune_url, self.timezone, self.description)
+            print(self.name, self.time_str, self.date_str, self.tune, self.timezone, self.description)
 
-        timezone_result = TZRegExp.search(self.AlarmTimezone.text())
+            timezone_result = TZRegExp.search(self.AlarmTimezone.text())
 
-        if not timezone_result:
-            self.statusBar.showMessage(f"{self.timezone} 은 맞지 않는 시간대 문자열 입니다. (+-HHMM)")
-            return
-        else:
-            print(timezone_result.group(1))
+            if not timezone_result:
+                if self.parent is not None:
+                    self.parent.statusbar.showMessage(f"{self.timezone} 은 맞지 않는 시간대 문자열 입니다. (+-HHMM)")
+                return
+            else:
+                print(timezone_result.group(1))
+        except Exception as E:
+            print(E)
 
     def tune_btn_clicked(self):
         tune_file = QFileDialog.getOpenFileName(parent=self, caption="알람음 열기", filter="*.wav *.mp3")
 
         if tune_file[1] is not None:
-            self.tune_url = tune_file[0]
+            self.tune = tune_file[0]
 
-            print(os.path.split(self.tune_url))
+            print(os.path.split(self.tune))
 
-            self.AlarmTuneInfo.setText(os.path.split(self.tune_url)[1])
+            self.AlarmTuneInfo.setText(os.path.split(self.tune)[1])
 
 
 if __name__ == '__main__':
@@ -98,7 +108,7 @@ if __name__ == '__main__':
 
     schedule = sg.generate()
 
-    myWindow = AlarmAddWindow(schedule)
+    myWindow = AlarmAddWindow(schedule=schedule)
 
     myWindow.show()
 

@@ -5,9 +5,10 @@ from PyQt5 import uic
 UI = uic.loadUiType("./ui/AlarmListWindow.ui")[0]
 
 
-class AlarmListWindow(QMainWindow, UI):
-    def __init__(self):
-        super().__init__()
+class AlarmListWindow(QDialog, UI):
+    def __init__(self, parent=None):
+        super(AlarmListWindow, self).__init__(parent)
+
         self.setupUi(self)
 
 

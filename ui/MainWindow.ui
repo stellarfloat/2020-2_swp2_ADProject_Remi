@@ -16,6 +16,18 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>300</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>300</width>
+    <height>200</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Remi</string>
   </property>
@@ -45,6 +57,7 @@
     </property>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -54,32 +67,37 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="AlarmList">
-    <property name="contextMenuPolicy">
-     <enum>Qt::NoContextMenu</enum>
+   <widget class="QMenu" name="menu">
+    <property name="enabled">
+     <bool>true</bool>
     </property>
     <property name="acceptDrops">
      <bool>false</bool>
     </property>
     <property name="title">
-     <string>일정 목록</string>
+     <string>일정</string>
     </property>
+    <addaction name="AddAlarm"/>
+    <addaction name="ListAlarm"/>
    </widget>
-   <widget class="QMenu" name="AlarmAdd">
-    <property name="contextMenuPolicy">
-     <enum>Qt::NoContextMenu</enum>
-    </property>
-    <property name="acceptDrops">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>일정 추가</string>
-    </property>
-   </widget>
-   <addaction name="AlarmList"/>
-   <addaction name="AlarmAdd"/>
+   <addaction name="menu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <action name="AddAlarm">
+   <property name="text">
+    <string>&amp;일정 추가</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="ListAlarm">
+   <property name="text">
+    <string>&amp;일정 목록</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
