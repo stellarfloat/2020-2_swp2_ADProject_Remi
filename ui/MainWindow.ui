@@ -34,15 +34,11 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>50</pointsize>
-      <stylestrategy>NoAntialias</stylestrategy>
+      <pointsize>35</pointsize>
      </font>
     </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="text">
-     <string>12:00:00</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
