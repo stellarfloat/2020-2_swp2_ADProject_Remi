@@ -16,6 +16,13 @@ class Schedule:
         """
         return int(time.mktime(self.time))
 
+    def get_time(self):
+        """
+        Get time string [Y-M-D, H:M:S, +-HHMM] from Schedule
+        :return:
+        """
+        return time.strftime("%Y-%m-%d %H:%M:%S %z", self.time).split()
+
     def set_time(self, ptime: str, date: str, timezone: str = time.strftime("%z")):
         """
         Set Schedule time (with Timezone)
