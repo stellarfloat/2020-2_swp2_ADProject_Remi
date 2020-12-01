@@ -129,7 +129,7 @@ if __name__ == '__main__':
     # Schedule(
     #   testSchedule,
     #   test schedule description,
-    #   time.struct_time,
+    #   1608858000,
     #   None
     # )
     # 1608858000
