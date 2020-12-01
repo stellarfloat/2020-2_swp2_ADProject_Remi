@@ -18,7 +18,10 @@ class ScheduleManager:
                     if i.get_timestamp() < time.mktime(time.localtime()):
                         self.schedules.remove(i)
                     else:
-                        self.mapped_schedules[i.get_timestamp()].append(i)
+                        if i.get_timestamp() in self.mapped_schedules:
+                            self.mapped_schedules[i.get_timestamp()].append(i)
+                        else:
+                            self.mapped_schedules[i.get_timestamp()] = [i]
 
                 F.close()
         except FileNotFoundError as E:

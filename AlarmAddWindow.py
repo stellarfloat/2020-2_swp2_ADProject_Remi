@@ -8,7 +8,6 @@ from PyQt5.QtCore import QDate, QTime
 from PyQt5.QtWidgets import *
 
 from Schedule import ScheduleGenerator, Schedule
-from main import MainWindow
 
 UI = uic.loadUiType("./ui/AlarmAddWindow.ui")[0]
 
@@ -17,7 +16,6 @@ TZRegExp = re.compile(r"^((?:\+|-)\d{2}\d{2})$")
 
 class AlarmAddWindow(QDialog, UI):
     schedule: Schedule
-    parent: Optional[MainWindow]
 
     def __init__(self, parent=None, p_schedule=None):
         """
@@ -71,7 +69,7 @@ class AlarmAddWindow(QDialog, UI):
             date = self.AlarmDate.date()
 
             self.time_str = time.toString("HH:mm:ss")
-            self.date_str = date.toString("Y-M-d")
+            self.date_str = date.toString("yyyy-M-dd")
 
             self.description = self.AlarmDescription.toPlainText()
 
@@ -105,7 +103,12 @@ class AlarmAddWindow(QDialog, UI):
                 sg_.set_tune(self.tune)
                 sg_.set_repeat(self.repeat)
 
-                self.parent.ScheduleManager.add_schedule(sg_.generate())
+                sch = sg_.generate()
+                self.parent.ScheduleManager.add_schedule(sch)
+                self.parent.ScheduleManager.save()
+                print(sch)
+
+                self.close()
         except Exception as E:
             print(E)
 
