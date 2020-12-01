@@ -54,7 +54,7 @@ class ScheduleGenerator:
         self.time = None
         self.repeat = 0
 
-    def set_name(self, name):
+    def set_name(self, name: str):
         """
         Set Schedule name
         :param name: String
@@ -66,26 +66,27 @@ class ScheduleGenerator:
         else:
             raise ValueError("name argument is must be String")
 
-    def set_description(self, description: str = ""):
+    def set_description(self, description: str):
         """
         Set Schedule description
         :param description: String
         :return:
         """
-        if isinstance(description, str) or isinstance(description, None):
+
+        if isinstance(description, str):
             self.description = description
             return self
         else:
             raise ValueError("description argument is must be String or None")
 
-    def set_tune(self, tune: str = ""):
+    def set_tune(self, tune: str):
         """
         Set Schedule alarm tune
         :param tune:
         :return:
         """
         if isinstance(tune, str):
-            self.description = tune
+            self.tune = tune
             return self
         else:
             raise ValueError("tune argument is must be String")

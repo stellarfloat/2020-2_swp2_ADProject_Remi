@@ -2,7 +2,6 @@ import os
 import re
 import sys
 
-from typing import Optional
 from PyQt5 import uic
 from PyQt5.QtCore import QDate, QTime
 from PyQt5.QtWidgets import *
@@ -35,15 +34,20 @@ class AlarmAddWindow(QDialog, UI):
         self.addButton.clicked.connect(self.add_btn_clicked)
         self.cancelButton.clicked.connect(self.cancel_btn_clicked)
         self.AlarmTune.clicked.connect(self.tune_btn_clicked)
+
+        self.name = ""
+        self.description = ""
         self.tune = ""
         self.repeat = 0
 
         if p_schedule is not None:
+            self.addButton.setText("수정")
+
             self.name = p_schedule.name
 
             self.AlarmName.setText(self.name)
 
-            self.time_str, self.date_str, self.timezone = p_schedule.get_time()
+            self.date_str, self.time_str, self.timezone = p_schedule.get_time()
 
             self.AlarmTime.setTime(QTime.fromString(self.time_str, "HH:mm:ss"))
             self.AlarmDate.setDate(QDate.fromString(self.date_str, "Y-M-d"))
@@ -71,7 +75,7 @@ class AlarmAddWindow(QDialog, UI):
             self.time_str = time.toString("HH:mm:ss")
             self.date_str = date.toString("yyyy-M-dd")
 
-            self.description = self.AlarmDescription.toPlainText()
+            self.description = str(self.AlarmDescription.toPlainText())
 
             self.name = self.AlarmName.text()
 
@@ -95,6 +99,8 @@ class AlarmAddWindow(QDialog, UI):
                 self.schedule.tune = self.tune
                 self.schedule.repeat = self.repeat
             else:
+                print(self.description)
+
                 sg_ = ScheduleGenerator()
 
                 sg_.set_name(self.name)
@@ -106,11 +112,16 @@ class AlarmAddWindow(QDialog, UI):
                 sch = sg_.generate()
                 self.parent.ScheduleManager.add_schedule(sch)
                 self.parent.ScheduleManager.save()
-                print(sch)
 
                 self.close()
+
+            if type(self.parent).__name__ == "AlarmListWindow":
+                self.parent.get_contents()
+                self.parent.ScheduleManager.save()
         except Exception as E:
             print(E)
+
+        self.close()
 
     def tune_btn_clicked(self):
         tune_file = QFileDialog.getOpenFileName(parent=self, caption="알람음 열기", filter="*.wav *.mp3")
