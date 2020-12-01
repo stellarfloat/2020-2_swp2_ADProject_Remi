@@ -1,4 +1,5 @@
 import pickle
+import time
 
 from Schedule import Schedule, ScheduleGenerator
 
@@ -14,7 +15,10 @@ class ScheduleManager:
                 self.schedules = pickle.load(F)
 
                 for i in self.schedules:
-                    self.mapped_schedules[i.get_timestamp()].append(i)
+                    if i.get_timestamp() < time.mktime(time.localtime()):
+                        self.schedules.remove(i)
+                    else:
+                        self.mapped_schedules[i.get_timestamp()].append(i)
 
                 F.close()
         except FileNotFoundError as E:
