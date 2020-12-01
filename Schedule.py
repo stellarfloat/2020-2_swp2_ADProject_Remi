@@ -1,13 +1,21 @@
 import time
 
 
-# Schedule (name: String, time: String(ISO-8601), description: String, tune: String)
 class Schedule:
-    def __init__(self, name, ptime, description, tune):
+    def __init__(self, name: str, ptime: time.struct_time, description: str, tune: str, repeat: int):
+        """
+        Schedule.__init__
+        :param name: Schedule Name: str
+        :param ptime: Schedule Time: time.struct_time
+        :param description: Schedule Description: String(allow null)
+        :param tune: Schedule Alarm Tune: String(allow null)
+        :param repeat: Schedule Repeat: int (0: no repeat, n: repeat with n days)
+        """
         self.name = name
         self.description = description
         self.tune = tune
         self.time = ptime
+        self.repeat = repeat
 
     def get_timestamp(self):
         """
@@ -34,7 +42,8 @@ class Schedule:
         self.time = get_time(ptime, date, timezone)
 
     def __repr__(self):
-        return f"Schedule({self.name}, {self.description}, {self.get_timestamp()}, {self.tune})"
+        return f"Schedule({self.name}, {self.description}, {self.get_timestamp()}, " \
+               f"{self.tune}, {self.repeat} day repeat)"
 
 
 class ScheduleGenerator:
@@ -43,8 +52,8 @@ class ScheduleGenerator:
         self.description = None
         self.tune = None
         self.time = None
+        self.repeat = 0
 
-    # ScheduleGenerator.setName(name: String): self
     def set_name(self, name):
         """
         Set Schedule name
@@ -57,7 +66,6 @@ class ScheduleGenerator:
         else:
             raise ValueError("name argument is must be String")
 
-    # ScheduleGenerator.setDescription(description: String | None): self
     def set_description(self, description: str = ""):
         """
         Set Schedule description
@@ -70,7 +78,6 @@ class ScheduleGenerator:
         else:
             raise ValueError("description argument is must be String or None")
 
-    # ScheduleGenerator.setTune(tune: String(AbsolutePath) | None): self
     def set_tune(self, tune: str = ""):
         """
         Set Schedule alarm tune
@@ -95,24 +102,33 @@ class ScheduleGenerator:
 
         return self
 
-    # ScheduleGenerator.generate(): Schedule
+    def set_repeat(self, repeat: int):
+        """
+        Set Schedule Repeat
+        :param repeat: int
+        :return:
+        """
+        self.repeat = repeat
+
+        return self
+
     def generate(self):
         """
         Generate Schedule object
         :return: Schedule with configurable fields
         """
-        return Schedule(self.name, self.time, self.description, self.tune)
+        return Schedule(self.name, self.time, self.description, self.tune, self.repeat)
 
 
 def get_time(ptime: str, date: str, timezone: str = time.strftime("%z")):
-        """
-        Set Schedule time (with Timezone)
-        :param ptime: "H:M:S"
-        :param date: "Y-M-D"
-        :param timezone: "+-HHMM"
-        :return:
-        """
-        return time.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
+    """
+    Set Schedule time (with Timezone)
+    :param ptime: "H:M:S"
+    :param date: "Y-M-D"
+    :param timezone: "+-HHMM"
+    :return:
+    """
+    return time.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
 
 
 if __name__ == '__main__':
@@ -121,6 +137,7 @@ if __name__ == '__main__':
     sg.set_name("testSchedule")
     sg.set_description("test schedule description")
     sg.set_time("10:00:00", "2020-12-25")  # "-0800")
+    sg.set_repeat(7)
 
     schedule = sg.generate()
 
@@ -130,6 +147,7 @@ if __name__ == '__main__':
     #   testSchedule,
     #   test schedule description,
     #   1608858000,
-    #   None
+    #   None,
+    #   7 day repeat
     # )
     # 1608858000

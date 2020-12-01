@@ -2,28 +2,34 @@ import os
 import re
 import sys
 
+from typing import Optional
 from PyQt5 import uic
 from PyQt5.QtCore import QDate, QTime
 from PyQt5.QtWidgets import *
 
-from Schedule import ScheduleGenerator
+from Schedule import ScheduleGenerator, Schedule
+from main import MainWindow
 
 UI = uic.loadUiType("./ui/AlarmAddWindow.ui")[0]
 
-TZRegExp = re.compile(r"^((?:\+|\-)\d{2}\d{2})$")
+TZRegExp = re.compile(r"^((?:\+|-)\d{2}\d{2})$")
 
 
 class AlarmAddWindow(QDialog, UI):
-    def __init__(self, parent=None, schedule=None):
+    schedule: Schedule
+    parent: Optional[MainWindow]
+
+    def __init__(self, parent=None, p_schedule=None):
         """
         AlarmAddWindow Class
-        :param schedule: if open this window as Schedule edit mode, you can pass Schedule object to this parameters
+        :param p_schedule: if open this window as Schedule edit mode, you can pass Schedule object to this parameters
         """
         super(AlarmAddWindow, self).__init__(parent)
 
         self.setupUi(self)
 
         self.parent = parent
+        self.schedule = p_schedule
 
         self.AlarmTime.setTime(QTime.currentTime())
         self.AlarmDate.setDate(QDate.currentDate())
@@ -32,29 +38,29 @@ class AlarmAddWindow(QDialog, UI):
         self.cancelButton.clicked.connect(self.cancel_btn_clicked)
         self.AlarmTune.clicked.connect(self.tune_btn_clicked)
         self.tune = ""
+        self.repeat = 0
 
-        if schedule is not None:
-            self.name = schedule.name
+        if p_schedule is not None:
+            self.name = p_schedule.name
 
             self.AlarmName.setText(self.name)
 
-        if schedule is not None:
-            self.time_str, self.date_str, self.timezone = schedule.get_time()
+            self.time_str, self.date_str, self.timezone = p_schedule.get_time()
 
             self.AlarmTime.setTime(QTime.fromString(self.time_str, "HH:mm:ss"))
             self.AlarmDate.setDate(QDate.fromString(self.date_str, "Y-M-d"))
             self.AlarmTimezone.setText(self.timezone)
 
-        if schedule is not None:
-            self.tune_url = schedule.tune
+            self.tune = p_schedule.tune
 
-            if self.tune_url:
-                self.AlarmTuneInfo.setText(os.path.split(self.tune_url)[1])
+            if self.tune:
+                self.AlarmTuneInfo.setText(os.path.split(self.tune)[1])
 
-        if schedule is not None:
-            self.description = schedule.description
-
+            self.description = p_schedule.description
             self.AlarmDescription.setPlainText(self.description)
+
+            self.repeat = p_schedule.repeat
+            self.AlarmRepeat.setValue(self.repeat)
 
     def cancel_btn_clicked(self):
         self.close()
@@ -73,16 +79,33 @@ class AlarmAddWindow(QDialog, UI):
 
             self.timezone = self.AlarmTimezone.text()
 
-            print(self.name, self.time_str, self.date_str, self.tune, self.timezone, self.description)
+            self.repeat = self.AlarmRepeat.value()
+
+            if self.name == "":
+                self.parent.statusbar.showMessage("일정 이름을 입력해주세요.")
+                return
 
             timezone_result = TZRegExp.search(self.AlarmTimezone.text())
 
             if not timezone_result:
-                if self.parent is not None:
-                    self.parent.statusbar.showMessage(f"{self.timezone} 은 맞지 않는 시간대 문자열 입니다. (+-HHMM)")
-                return
+                self.parent.statusbar.showMessage(f"{self.timezone} 은 정확하지 않은 시간대입니다. (+-HHMM)")
+
+            if self.schedule:
+                self.schedule.name = self.name
+                self.schedule.set_time(self.time_str, self.date_str, self.timezone)
+                self.schedule.description = self.description
+                self.schedule.tune = self.tune
+                self.schedule.repeat = self.repeat
             else:
-                print(timezone_result.group(1))
+                sg_ = ScheduleGenerator()
+
+                sg_.set_name(self.name)
+                sg_.set_time(self.time_str, self.date_str, self.timezone)
+                sg_.set_description(self.description)
+                sg_.set_tune(self.tune)
+                sg_.set_repeat(self.repeat)
+
+                self.parent.ScheduleManager.add_schedule(sg_.generate())
         except Exception as E:
             print(E)
 
@@ -108,7 +131,7 @@ if __name__ == '__main__':
 
     schedule = sg.generate()
 
-    myWindow = AlarmAddWindow(schedule=schedule)
+    myWindow = AlarmAddWindow(p_schedule=schedule)
 
     myWindow.show()
 
