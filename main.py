@@ -5,6 +5,7 @@ import time
 
 from AlarmAddWindow import AlarmAddWindow
 from AlarmListWindow import AlarmListWindow
+from AlarmWindow import AlarmWindow
 from ScheduleManager import ScheduleManager
 
 UI = uic.loadUiType("./ui/MainWindow.ui")[0]
@@ -33,7 +34,13 @@ class MainWindow(QMainWindow, UI):
 
         self.CurrentTime.setText(time.strftime("%p %I:%M:%S"))
 
-        print(int(time.mktime(current_time)))
+        schedules = self.ScheduleManager.get_schedules(time.mktime(current_time))
+
+        if len(schedules) > 0:
+            for i in schedules:
+                alarm_window = AlarmWindow(i, self)
+
+                alarm_window.show()
 
     def alarm_add_handler(self):
         try:
