@@ -12,51 +12,61 @@ dataset = {
     '오늘': {
         'type': 'independent',
         'exec': lambda t: t + timedelta(0),
-        'meta': (1, 1)
+        'meta': (1, 1),
+        'time_stack': False
     },
     '내일': {
         'type': 'independent',
         'exec': lambda t: t + timedelta(1),
-        'meta': (1, 1)
+        'meta': (1, 1),
+        'time_stack': False
     },
     '정오': {
         'type': 'independent',
         'exec': lambda t: mid_day(t),
-        'meta': (1, 1)
+        'meta': (1, 1),
+        'time_stack': False
     },
     '자정': {
         'type': 'independent',
         'exec': lambda t: ceil_day(t),
-        'meta': (1, 1)
+        'meta': (1, 1),
+        'time_stack': False
     },\
     '초': {
         'type': 'dependent',
         'exec': lambda x: timedelta(0, x),
-        'meta': (0, 0)
+        'meta': (0, 1),
+        'time_stack': True
     },
     '분': {
         'type': 'dependent',
         'exec': lambda x: timedelta(0, 60 * x),
-        'meta': (0, 0)
+        'meta': (0, 1),
+        'time_stack': True
     },
     '시간': {
         'type': 'dependent',
         'exec': lambda x: timedelta(0, 3600 * x),
-        'meta': (0, 0)
+        'meta': (0, 1),
+        'time_stack': True
     },
     '일': {
         'type': 'dependent',
         'exec': lambda x: timedelta(x),
-        'meta': (0, 0)
+        'meta': (0, 1),
+        'time_stack': True
     },
     '전': {
         'type': 'dependent',
         'exec': lambda x: (lambda t: t - x),
-        'meta': (0, 1)
+        'meta': (0, 1),
+        'time_stack': False
     },
     '후': {
         'type': 'dependent',
         'exec': lambda x: (lambda t: t + x),
-        'meta': (0, 1)
+        'meta': (0, 1),
+        'time_stack': False
     }
 }
