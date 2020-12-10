@@ -7,10 +7,11 @@ from dataset import dataset
 
 
 class timeObject():
-    def __init__(self, exec, meta, name = '') -> None:
+    def __init__(self, exec, meta, time_stack, name = '') -> None:
         self.exec = exec
         self.frontW = int(meta[0])
         self.backW = int(meta[1])
+        self.time_stack = time_stack
         self.name = name
     
     def getTotalW(self) -> int:
@@ -22,12 +23,6 @@ class timeObject():
 
     def __repr__(self) -> str:
         return f'|{self.frontW}|-timeObject({self.name})-|{self.backW}|'
-        if type(self.exec) == types.LambdaType:
-            l = str(inspect.getsourcelines(self.exec)[0])
-            #l = l.split("'exec':")[1].strip()[:-5] # temp
-            return f'|{self.frontW}|-timeObject({l})-|{self.backW}|'
-        else:
-            return f'|{self.frontW}|-timeObject({self.exec})-|{self.backW}|'
 
 
 def to_time(token: str) -> list:
@@ -52,12 +47,12 @@ def to_time(token: str) -> list:
     for i, tok in enumerate(parsed):
         if type(tok) == str:
             try:
-                timeObj = timeObject(dataset[tok]['exec'], dataset[tok]['meta'], tok)
+                timeObj = timeObject(dataset[tok]['exec'], dataset[tok]['meta'], dataset[tok]['time_stack'], tok)
                 parsed[i] = timeObj
             except KeyError:
                 raise NotImplementedError # TODO: temp
         elif type(tok) == float:
-            timeObj = timeObject(tok, (1, 0), str(tok))
+            timeObj = timeObject(tok, (1, 0), True, str(tok))
             parsed[i] = timeObj
            
     return parsed
@@ -70,11 +65,12 @@ def parse_time(text, time_base = datetime.now()):
     for word in words: # Translate to timeObject
         word_translated = to_time(word)
         translated += word_translated
-    #pprint(translated)
+    pprint(translated)
 
     optimized = []
     stack = []
     stack_name = []
+    stack_time = []
     for tObj in translated: # Optimize timeObject [ex] [(1, 0), (0, 0), (0, 1)] -> [(1, 1)]
         #print(f'forloop: {tObj}, {tObj.getTotalW()}')
         
@@ -104,7 +100,7 @@ def parse_time(text, time_base = datetime.now()):
 
 
 if __name__ == '__main__':
-    text = '오늘 자정 30분 전'
+    text = '1일 2시간 34분 56초 후'
     time_base = datetime.now()
 
     print(f'현재 시각: {time_base}')
