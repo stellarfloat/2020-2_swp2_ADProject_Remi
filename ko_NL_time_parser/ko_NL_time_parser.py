@@ -3,7 +3,10 @@ import types
 from datetime import datetime, timedelta
 from pprint import pprint
 
-from dataset import dataset
+try:
+    from .dataset import dataset
+except ImportError:
+    from dataset import dataset
 
 
 class timeObject():
