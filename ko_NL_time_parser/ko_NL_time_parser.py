@@ -132,7 +132,7 @@ def parse_time(text, time_base = datetime.now()):
     for tDelta in optimized:
         time_base = tDelta.expression(time_base)
 
-    return time_base
+    return time_base, translated
 
 
 
@@ -143,4 +143,4 @@ if __name__ == '__main__':
     print(f'현재 시각: {time_base}')
     print(f'[In] {text}')
 
-    print(f'[Out] {parse_time(text, time_base)}')
+    print(f'[Out] {parse_time(text, time_base)[0]}')
