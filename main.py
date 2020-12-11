@@ -34,7 +34,7 @@ class MainWindow(QMainWindow, UI):
 
         self.CurrentTime.setText(time.strftime("%p %I:%M:%S"))
 
-        schedules = self.ScheduleManager.get_schedules(time.mktime(current_time))
+        schedules = self.ScheduleManager.get_schedules(int(time.mktime(current_time)))
 
         if len(schedules) > 0:
             for i in schedules:

@@ -82,9 +82,11 @@ class ScheduleManager:
         :return:
         """
         if isinstance(timestamp, int):
-            return self.mapped_schedules[timestamp]
+            return self.mapped_schedules.get(timestamp, [])
+        elif isinstance(timestamp, float):
+            return self.mapped_schedules.get(int(timestamp), [])
         else:
-            raise ValueError("timestamp argument only a integer (Timestamp)")
+            raise ValueError("timestamp argument only a integer or float (Timestamp)")
 
     def find_schedule(self, p_name: str, p_time: str, p_repeat: int = 0):
         """
