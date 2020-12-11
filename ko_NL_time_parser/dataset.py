@@ -21,6 +21,12 @@ dataset = {
         'meta': (1, 1),
         'time_stack': False
     },
+    '지금': {
+        'type': 'independent',
+        'exps': lambda t: t + timedelta(0),
+        'meta': (1, 1),
+        'time_stack': False
+    },
     '내일': {
         'type': 'independent',
         'exps': lambda t: t + timedelta(1),
