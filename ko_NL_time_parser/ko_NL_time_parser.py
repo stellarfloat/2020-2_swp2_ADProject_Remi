@@ -72,7 +72,7 @@ def parse_time(text, time_base = datetime.now()):
     for word in words: # Translate to timeObject
         word_translated = to_time(word)
         translated += word_translated
-    #pprint(translated)
+    if debug: pprint(translated)
 
     optimized = []
     stack = []
@@ -133,16 +133,18 @@ def parse_time(text, time_base = datetime.now()):
     #             stack_name.append(tObj.name)
     # else:
     #     optimized += stack
-    #pprint(optimized)
+    if debug: pprint(optimized)
 
     for tDelta in optimized:
         time_base = tDelta.expression(time_base)
 
-    return time_base, translated
+    return time_base, translated, optimized
 
 
 
 if __name__ == '__main__':
+    debug = True
+    
     text = '자정'
     time_base = datetime.now()
 
