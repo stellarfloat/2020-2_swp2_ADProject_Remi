@@ -96,8 +96,9 @@ def parse_time(text, time_base = datetime.now()):
         elif nextObj.frontW == 0:
             stack.append(nextObj)
     else:
-        if translated[-1].getTotalW() == 1:
-            optimized.append(translated[-1])
+        if len(translated) > 0:
+            if translated[-1].getTotalW() == 1:
+                optimized.append(translated[-1])
     
     timeDeltaSum = timedelta(0)
     while len(stack_time) != 0:
@@ -146,7 +147,7 @@ def parse_time(text, time_base = datetime.now()):
 if __name__ == '__main__':
     debug = True
 
-    text = '자정'
+    text = '10'
     time_base = datetime.now()
 
     print(f'현재 시각: {time_base}')
