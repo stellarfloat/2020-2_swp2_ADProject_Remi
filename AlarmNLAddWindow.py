@@ -52,7 +52,7 @@ class AlarmNLAddWindow(QDialog, UI):
 
             self.date_str, self.time_str, self.timezone = p_schedule.get_time()
 
-            self.AlarmDateTime.setDateTime(QDateTime.fromString(f'{self.date_str} {self.time_str}', 'Y-M-d HH:mm:ss'))
+            self.AlarmDateTime.setDateTime(QDateTime.fromString(f'{self.date_str} {self.time_str}', 'yyyy-MM-dd hh:mm:ss'))
 
             self.tune = p_schedule.tune
 
@@ -82,8 +82,8 @@ class AlarmNLAddWindow(QDialog, UI):
 
     def add_btn_clicked(self):
         try:
-            time = self.AlarmTime.time()
-            date = self.AlarmDate.date()
+            time = self.AlarmDateTime.time()
+            date = self.AlarmDateTime.date()
 
             self.time_str = time.toString("HH:mm:ss")
             self.date_str = date.toString("yyyy-M-dd")
@@ -92,7 +92,7 @@ class AlarmNLAddWindow(QDialog, UI):
 
             self.name = self.AlarmName.text()
 
-            self.timezone = self.AlarmTimezone.text()
+            self.timezone = '+0900' #self.AlarmTimezone.text()
 
             self.repeat = self.AlarmRepeat.value()
 
@@ -100,10 +100,10 @@ class AlarmNLAddWindow(QDialog, UI):
                 self.parent.statusbar.showMessage("일정 이름을 입력해주세요.")
                 return
 
-            timezone_result = TZRegExp.search(self.AlarmTimezone.text())
+            # timezone_result = TZRegExp.search(self.AlarmTimezone.text())
 
-            if not timezone_result:
-                self.parent.statusbar.showMessage(f"{self.timezone} 은 정확하지 않은 시간대입니다. (+-HHMM)")
+            # if not timezone_result:
+            #     self.parent.statusbar.showMessage(f"{self.timezone} 은 정확하지 않은 시간대입니다. (+-HHMM)")
 
             if self.schedule:
                 self.schedule.name = self.name
