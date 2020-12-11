@@ -50,17 +50,21 @@ def to_time(token: str) -> list:
                 timeObj = timeObject(dataset[tok]['exps'], dataset[tok]['meta'], dataset[tok]['time_stack'], tok)
                 parsed[i] = timeObj
             except KeyError:
+                parsed[i] = None
+                continue
                 raise NotImplementedError # TODO: temp
         elif type(tok) == float:
             timeObj = timeObject(tok, (1, 0), True, str(tok))
             parsed[i] = timeObj
-           
+    
+    parsed = list(filter(lambda x: x != None, parsed))
     return parsed
 
 
 def parse_time(text, time_base = datetime.now()):
-    '''Main parser function'''
+    '''Parse korean NL time expression to datetime'''
     words = text.split(' ') # Basic tokenizing(whitespace)
+    words = filter(lambda x: len(x) > 0, words)
     translated = []
     for word in words: # Translate to timeObject
         word_translated = to_time(word)
