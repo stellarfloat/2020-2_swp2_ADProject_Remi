@@ -7,8 +7,8 @@ from dataset import dataset
 
 
 class timeObject():
-    def __init__(self, exec, meta, time_stack, name = '') -> None:
-        self.exec = exec
+    def __init__(self, expression, meta, time_stack, name = '') -> None:
+        self.expression = expression
         self.frontW = int(meta[0])
         self.backW = int(meta[1])
         self.time_stack = time_stack
@@ -47,7 +47,7 @@ def to_time(token: str) -> list:
     for i, tok in enumerate(parsed):
         if type(tok) == str:
             try:
-                timeObj = timeObject(dataset[tok]['exec'], dataset[tok]['meta'], dataset[tok]['time_stack'], tok)
+                timeObj = timeObject(dataset[tok]['exps'], dataset[tok]['meta'], dataset[tok]['time_stack'], tok)
                 parsed[i] = timeObj
             except KeyError:
                 raise NotImplementedError # TODO: temp
@@ -65,35 +65,68 @@ def parse_time(text, time_base = datetime.now()):
     for word in words: # Translate to timeObject
         word_translated = to_time(word)
         translated += word_translated
-    pprint(translated)
+    #pprint(translated)
 
     optimized = []
     stack = []
     stack_name = []
     stack_time = []
-    for tObj in translated: # Optimize timeObject [ex] [(1, 0), (0, 0), (0, 1)] -> [(1, 1)]
-        #print(f'forloop: {tObj}, {tObj.getTotalW()}')
+    for i in range(len(translated) - 1):
+        currObj = translated[i]
+        nextObj = translated[i + 1]
+        if currObj.getTotalW() == 1:
+            optimized.append(currObj)
+            continue
+        if currObj.backW + nextObj.frontW == 0:
+            name = f'{currObj.name}{nextObj.name}'
+            newObj = timeObject(nextObj.expression(currObj.expression), 
+                                (1, 1), 
+                                currObj.time_stack and nextObj.time_stack,
+                                name)
+            stack_time.append(newObj)
+            stack_name.append(name)
+        elif nextObj.frontW == 0:
+            stack.append(nextObj) 
+    
+    timeDeltaSum = timedelta(0)
+    while len(stack_time) != 0:
+        tObj = stack_time.pop()
+        timeDeltaSum += tObj.expression
+    
+    if len(stack) == 1:
+        tAlter = stack.pop()
+        tAlter.expression(timeDeltaSum)
+        tObj = timeObject(tAlter.expression(timeDeltaSum),
+                          (1, 1),
+                          False,
+                          ' '.join(stack_name + [tAlter.name]))
+        optimized.append(tObj)
+
+    # for tObj in translated: # Optimize timeObject [ex] [(1, 0), (0, 0), (0, 1)] -> [(1, 1)]
+    #     print(f'forloop: {tObj}, {tObj.getTotalW()}')
         
-        if tObj.getTotalW() == 1:
-            optimized.append(tObj)
-        else:
-            if len(stack) != 0:
-                last = stack.pop()
-                if type(last) == timeObject:
-                    stack_name.append(tObj.name)
-                    stack.append(tObj.exec(last.exec))
-                else:
-                    stack_name.append(tObj.name)
-                    stack.append(timeObject(tObj.exec(last), (1, 1), ' '.join(stack_name)))
-            else:
-                stack.append(tObj)
-                stack_name.append(tObj.name)
-    else:
-        optimized += stack
+    #     if tObj.getTotalW() == 1:
+    #         optimized.append(tObj)
+    #     else:
+    #         if len(stack) != 0:
+    #             last = stack.pop()
+    #             stack_name.append(tObj.name)
+    #             stack.append(timeObject(tObj.expression(last), (1, 1), ' '.join(stack_name)))
+    #             # if type(last) == timeObject:
+    #             #     stack_name.append(tObj.name)
+    #             #     stack.append(tObj.expression(last.expression))
+    #             # else:
+    #             #     stack_name.append(tObj.name)
+    #             #     stack.append(timeObject(tObj.expression(last), (1, 1), ' '.join(stack_name)))
+    #         else:
+    #             stack.append(tObj)
+    #             stack_name.append(tObj.name)
+    # else:
+    #     optimized += stack
     #pprint(optimized)
 
     for tDelta in optimized:
-        time_base = tDelta.exec(time_base)
+        time_base = tDelta.expression(time_base)
 
     return time_base
 
