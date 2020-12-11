@@ -4,6 +4,7 @@ from PyQt5 import uic, QtCore, QtGui
 import time
 
 from AlarmAddWindow import AlarmAddWindow
+from AlarmNLAddWindow import AlarmNLAddWindow
 from AlarmListWindow import AlarmListWindow
 from AlarmWindow import AlarmWindow
 from ScheduleManager import ScheduleManager
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow, UI):
         self.Timer.timeout.connect(self.timer_handler)
 
         self.AddAlarm.triggered.connect(self.alarm_add_handler)
+        self.AddNLAlarm.triggered.connect(self.alarmNL_add_handler)
         self.ListAlarm.triggered.connect(self.alarm_list_handler)
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
@@ -48,6 +50,15 @@ class MainWindow(QMainWindow, UI):
             add_window.show()
 
             self.statusbar.showMessage("알림 추가 창을 열었습니다.")
+        except Exception as E:
+            print(E)
+
+    def alarmNL_add_handler(self):
+        try:
+            addNL_window = AlarmNLAddWindow(self)
+            addNL_window.show()
+
+            self.statusbar.showMessage("알림 추가(NLP) 창을 열었습니다.")
         except Exception as E:
             print(E)
 
