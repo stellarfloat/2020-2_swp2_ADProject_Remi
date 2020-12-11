@@ -76,8 +76,9 @@ class AlarmNLAddWindow(QDialog, UI):
             self.displayParseLog.setText(E)
         else:
             self.displayParseLog.setText(f'**Result |** `(In)`_{[t.name for t in translated]}_ **->** `(Out)`_{[t.name for t in optimized]}_')
-            time_str = parsed_time.strftime('%Y-%m-%d %H:%M:%S')
-            self.AlarmDateTime.setDateTime(QDateTime.fromString(time_str, 'yyyy-MM-dd hh:mm:ss'))
+            if len(optimized) > 0:
+                time_str = parsed_time.strftime('%Y-%m-%d %H:%M:%S')
+                self.AlarmDateTime.setDateTime(QDateTime.fromString(time_str, 'yyyy-MM-dd hh:mm:ss'))
         
 
     def add_btn_clicked(self):
