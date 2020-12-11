@@ -8,6 +8,7 @@ try:
 except ImportError:
     from dataset import dataset
 
+debug = False
 
 class timeObject():
     def __init__(self, expression, meta, time_stack, name = '') -> None:
@@ -144,7 +145,7 @@ def parse_time(text, time_base = datetime.now()):
 
 if __name__ == '__main__':
     debug = True
-    
+
     text = '자정'
     time_base = datetime.now()
 
