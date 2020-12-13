@@ -20,13 +20,10 @@ class ScheduleManager:
                 self.schedules = pickle.load(F)
 
                 for i in self.schedules:
-                    if i.get_timestamp() < time.mktime(time.localtime()):
-                        self.schedules.remove(i)
+                    if i.get_timestamp() in self.mapped_schedules:
+                        self.mapped_schedules[i.get_timestamp()].append(i)
                     else:
-                        if i.get_timestamp() in self.mapped_schedules:
-                            self.mapped_schedules[i.get_timestamp()].append(i)
-                        else:
-                            self.mapped_schedules[i.get_timestamp()] = [i]
+                        self.mapped_schedules[i.get_timestamp()] = [i]
 
                 F.close()
         except FileNotFoundError as E:

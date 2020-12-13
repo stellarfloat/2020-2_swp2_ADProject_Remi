@@ -1,8 +1,16 @@
 import time
+from datetime import datetime
 
 
 class Schedule:
-    def __init__(self, name: str, ptime: time.struct_time, description: str, tune: str, repeat: int):
+    name: str
+    time: datetime
+    tune: str
+    description: str
+    repeat: int
+    is_enabled: bool
+
+    def __init__(self, name: str, ptime: datetime, description: str, tune: str, repeat: int):
         """
         Schedule.__init__
         :param name: Schedule Name: str
@@ -16,20 +24,21 @@ class Schedule:
         self.tune = tune
         self.time = ptime
         self.repeat = repeat
+        self.is_enabled = True
 
     def get_timestamp(self):
         """
         Get timestamp (UTC) from Schedule
         :return: Timestamp
         """
-        return int(time.mktime(self.time))
+        return int(self.time.timestamp())
 
     def get_time(self):
         """
         Get time string [Y-M-D, H:M:S, +-HHMM] from Schedule
         :return:
         """
-        return time.strftime("%Y-%m-%d %H:%M:%S %z", self.time).split()
+        return self.time.strftime("%Y-%m-%d %H:%M:%S %z").split()
 
     def set_time(self, ptime: str, date: str, timezone: str = time.strftime("%z")):
         """
@@ -129,7 +138,7 @@ def get_time(ptime: str, date: str, timezone: str = time.strftime("%z")):
     :param timezone: "+-HHMM"
     :return:
     """
-    return time.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
+    return datetime.strptime((date + " " + ptime + " " + timezone).rstrip(), "%Y-%m-%d %H:%M:%S %z")
 
 
 if __name__ == '__main__':
@@ -137,12 +146,14 @@ if __name__ == '__main__':
 
     sg.set_name("testSchedule")
     sg.set_description("test schedule description")
-    sg.set_time("10:00:00", "2020-12-25")  # "-0800")
+    sg.set_time("10:00:00", "2020-12-25", "-1400")
     sg.set_repeat(7)
 
     schedule = sg.generate()
 
     print(schedule, schedule.get_timestamp())
+
+    print(schedule.time)
 
     # Schedule(
     #   testSchedule,
@@ -152,3 +163,4 @@ if __name__ == '__main__':
     #   7 day repeat
     # )
     # 1608858000
+    # 2020-12-25 10:00:00-14:00

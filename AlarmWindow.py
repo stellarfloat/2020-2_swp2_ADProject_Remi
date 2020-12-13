@@ -1,13 +1,11 @@
 import sys
-import time
-from datetime import datetime
+from datetime import timedelta
 
 from PyQt5.QtMultimedia import QSound
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from dateutil.relativedelta import relativedelta
 
-from Schedule import Schedule, ScheduleGenerator
+from Schedule import Schedule, ScheduleGenerator, get_time
 
 UI = uic.loadUiType("./ui/AlarmWindow.ui")[0]
 
@@ -33,25 +31,11 @@ class AlarmWindow(QDialog, UI):
 
     def confirm_button_handler(self):
         if self.schedule.repeat > 0:
-            _sg = ScheduleGenerator()
+            print(self.schedule.get_time())
 
-            _sg.set_name(self.schedule.name)
-            _sg.set_tune(self.schedule.tune if self.schedule.tune else "")
-            _sg.set_description(self.schedule.description)
-            _sg.set_repeat(self.schedule.repeat)
+            self.schedule.time += timedelta(days=self.schedule.repeat)
 
-            repeat_time = datetime.strptime(" ".join(self.schedule.get_time()), "%Y-%m-%d %H:%M:%S %z")
-
-            repeat_time + relativedelta(days=self.schedule.repeat)
-
-            repeat_time = time.strftime("%Y-%m-%d %H:%M:%S %z", repeat_time.timetuple()).split()
-
-            _sg.set_time(repeat_time[1], repeat_time[0], repeat_time[2])
-
-            if self.parent is not None:
-                self.parent.ScheduleManager.add_schedule(_sg.generate())
-            else:
-                print(_sg.generate())
+            print(self.schedule.get_time())
 
         self.close()
 
@@ -61,7 +45,7 @@ if __name__ == '__main__':
 
     sg = ScheduleGenerator()
 
-    sg.set_name("테스트 일정").time = time.localtime()
+    sg.set_name("테스트 일정").time = get_time("10:00:00", "2020-12-25", "-1400")
     sg.set_description("테스트 일정의 테스트 설명").set_repeat(7)
 
     myWindow = AlarmWindow(sg.generate(), None)

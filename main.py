@@ -8,6 +8,7 @@ from AlarmNLAddWindow import AlarmNLAddWindow
 from AlarmListWindow import AlarmListWindow
 from AlarmWindow import AlarmWindow
 from ScheduleManager import ScheduleManager
+from AlarmWidget import AlarmWidget
 
 UI = uic.loadUiType("./ui/MainWindow.ui")[0]
 
@@ -31,18 +32,33 @@ class MainWindow(QMainWindow, UI):
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         self.ScheduleManager.save()
 
+    def get_contents(self):
+        for i in range(self.AlarmList.count()):
+            try:
+                self.AlarmList.itemAt(i).widget().deleteLater()
+            except Exception as E:
+                pass
+
+        for i in self.ScheduleManager.schedules:
+            widget = AlarmWidget(i)
+
+            self.AlarmList.addWidget(widget)
+
     def timer_handler(self):
         current_time = time.localtime()
 
-        self.CurrentTime.setText(time.strftime("%p %I:%M:%S"))
+        self.CurrentTime.setText(time.strftime("%Y-%m-%d %p %I:%M:%S"))
 
         schedules = self.ScheduleManager.get_schedules(int(time.mktime(current_time)))
 
         if len(schedules) > 0:
             for i in schedules:
-                alarm_window = AlarmWindow(i, self)
+                if i.is_enabled:
+                    alarm_window = AlarmWindow(i, self)
 
-                alarm_window.show()
+                    alarm_window.show()
+
+        self.get_contents()
 
     def alarm_add_handler(self):
         try:

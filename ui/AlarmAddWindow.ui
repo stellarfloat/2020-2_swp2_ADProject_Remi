@@ -200,7 +200,7 @@
              <enum>QDateTimeEdit::AmPmSection</enum>
             </property>
             <property name="displayFormat">
-             <string>AP HH:mm</string>
+             <string>AP hh:mm:ss</string>
             </property>
            </widget>
           </item>
