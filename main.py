@@ -5,7 +5,6 @@ import time
 
 from AlarmAddWindow import AlarmAddWindow
 from AlarmNLAddWindow import AlarmNLAddWindow
-from AlarmListWindow import AlarmListWindow
 from AlarmWindow import AlarmWindow
 from ScheduleManager import ScheduleManager
 from AlarmWidget import AlarmWidget
@@ -27,7 +26,11 @@ class MainWindow(QMainWindow, UI):
 
         self.AddAlarm.triggered.connect(self.alarm_add_handler)
         self.AddNLAlarm.triggered.connect(self.alarmNL_add_handler)
-        self.ListAlarm.triggered.connect(self.alarm_list_handler)
+
+        self.AddAlarmButton.clicked.connect(self.alarm_add_handler)
+
+        self.get_contents()
+        self.get_time_contents()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
         self.ScheduleManager.save()
@@ -40,14 +43,18 @@ class MainWindow(QMainWindow, UI):
                 pass
 
         for i in self.ScheduleManager.schedules:
-            widget = AlarmWidget(i)
+            widget = AlarmWidget(i, self)
 
             self.AlarmList.addWidget(widget)
+
+    def get_time_contents(self, current_time=time.localtime()):
+        self.CurrentTime.setText(time.strftime("%p %I:%M:%S", current_time))
+        self.CurrentDate.setText(time.strftime("%Y-%m-%d", current_time))
 
     def timer_handler(self):
         current_time = time.localtime()
 
-        self.CurrentTime.setText(time.strftime("%Y-%m-%d %p %I:%M:%S"))
+        self.get_time_contents(current_time)
 
         schedules = self.ScheduleManager.get_schedules(int(time.mktime(current_time)))
 
@@ -57,8 +64,6 @@ class MainWindow(QMainWindow, UI):
                     alarm_window = AlarmWindow(i, self)
 
                     alarm_window.show()
-
-        self.get_contents()
 
     def alarm_add_handler(self):
         try:
@@ -75,15 +80,6 @@ class MainWindow(QMainWindow, UI):
             addNL_window.show()
 
             self.statusbar.showMessage("알림 추가(NLP) 창을 열었습니다.")
-        except Exception as E:
-            print(E)
-
-    def alarm_list_handler(self):
-        try:
-            list_window = AlarmListWindow(self)
-            list_window.show()
-
-            self.statusbar.showMessage("알림 목록 창을 열었습니다.")
         except Exception as E:
             print(E)
 

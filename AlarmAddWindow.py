@@ -115,7 +115,7 @@ class AlarmAddWindow(QDialog, UI):
 
                 self.close()
 
-            if type(self.parent).__name__ == "AlarmListWindow":
+            if type(self.parent).__name__ == "MainWindow":
                 self.parent.get_contents()
                 self.parent.ScheduleManager.save()
         except Exception as E:

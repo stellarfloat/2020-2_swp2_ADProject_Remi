@@ -1,17 +1,19 @@
 import sys
-import time
 
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5 import uic
 
+from AlarmAddWindow import AlarmAddWindow
 from Schedule import Schedule, ScheduleGenerator, get_time
 
 UI = uic.loadUiType("./ui/AlarmWidget.ui")[0]
 
 
 class AlarmWidget(QWidget, UI):
-    def __init__(self, schedule: Schedule):
-        super().__init__()
+    def __init__(self, schedule: Schedule, parent=None):
+        super(AlarmWidget, self).__init__(parent)
+
+        self.parent = parent
 
         self.setupUi(self)
 
@@ -24,15 +26,17 @@ class AlarmWidget(QWidget, UI):
 
         self.alarm_button_styler()
 
-        self.alarmButton.clicked.connect(self.alarm_button_handler)
+        self.enableAlarm.clicked.connect(self.alarm_button_handler)
+        self.removeAlarm.clicked.connect(self.remove_button_handler)
+        self.editAlarm.clicked.connect(self.edit_button_handler)
 
     def alarm_button_styler(self):
         if self.schedule.is_enabled:
-            self.alarmButton.setStyleSheet("background-color: green;")
-            self.alarmButton.setText("활성화")
+            self.enableAlarm.setStyleSheet("background-color: green;")
+            self.enableAlarm.setText("활성화")
         else:
-            self.alarmButton.setStyleSheet("background-color: red;")
-            self.alarmButton.setText("비활성화")
+            self.enableAlarm.setStyleSheet("background-color: red;")
+            self.enableAlarm.setText("비활성화")
 
     def alarm_button_handler(self):
         self.schedule.is_enabled = not self.schedule.is_enabled
@@ -40,6 +44,16 @@ class AlarmWidget(QWidget, UI):
         print(self.schedule.is_enabled)
 
         self.alarm_button_styler()
+
+    def remove_button_handler(self):
+        if self.schedule is not None and self.parent.ScheduleManager is not None:
+            self.parent.ScheduleManager.remove_schedule(self.schedule)
+            self.parent.get_contents()
+
+    def edit_button_handler(self):
+        if self.schedule is not None:
+            modify_window = AlarmAddWindow(parent=self, p_schedule=self.schedule)
+            modify_window.open()
 
 
 if __name__ == '__main__':
