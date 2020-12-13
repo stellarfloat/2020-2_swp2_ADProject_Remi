@@ -19,11 +19,7 @@ class ScheduleManager:
             with open(self.scheduleFile, "rb") as F:
                 self.schedules = pickle.load(F)
 
-                for i in self.schedules:
-                    if i.get_timestamp() in self.mapped_schedules:
-                        self.mapped_schedules[i.get_timestamp()].append(i)
-                    else:
-                        self.mapped_schedules[i.get_timestamp()] = [i]
+                self.schedule_mapper()
 
                 F.close()
         except FileNotFoundError as E:
@@ -31,6 +27,15 @@ class ScheduleManager:
                 pickle.dump(self.schedules, F)
 
                 F.close()
+
+    def schedule_mapper(self):
+        self.mapped_schedules = {}
+
+        for i in self.schedules:
+            if i.get_timestamp() in self.mapped_schedules:
+                self.mapped_schedules[i.get_timestamp()].append(i)
+            else:
+                self.mapped_schedules[i.get_timestamp()] = [i]
 
     def add_schedule(self, p_schedule):
         """

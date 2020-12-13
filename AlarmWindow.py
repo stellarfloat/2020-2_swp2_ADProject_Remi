@@ -35,6 +35,9 @@ class AlarmWindow(QDialog, UI):
 
             self.schedule.time += timedelta(days=self.schedule.repeat)
 
+            if type(self.parent).__name__ == "MainWindow":
+                self.parent.ScheduleManager.schedule_mapper()
+
             print(self.schedule.get_time())
 
         self.close()

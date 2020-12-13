@@ -118,6 +118,7 @@ class AlarmAddWindow(QDialog, UI):
             if type(self.parent).__name__ == "MainWindow":
                 self.parent.get_contents()
                 self.parent.ScheduleManager.save()
+                self.parent.ScheduleManager.schedule_mapper()
         except Exception as E:
             print(E)
 

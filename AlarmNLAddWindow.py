@@ -132,6 +132,7 @@ class AlarmNLAddWindow(QDialog, UI):
             if type(self.parent).__name__ == "AlarmListWindow":
                 self.parent.get_contents()
                 self.parent.ScheduleManager.save()
+                self.parent.ScheduleManager.schedule_mapper()
         except Exception as E:
             print(E)
 
