@@ -107,6 +107,12 @@ dataset = {
         'meta': (0, 1),
         'time_stack': True
     },
+    '주일': {
+        'type': 'dependent',
+        'exps': lambda x: timedelta(7*x),
+        'meta': (0, 1),
+        'time_stack': True
+    },
 
     '전': {
         'type': 'dependent',
