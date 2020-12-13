@@ -27,7 +27,7 @@ class MainWindow(QMainWindow, UI):
         self.AddAlarm.triggered.connect(self.alarm_add_handler)
         self.AddNLAlarm.triggered.connect(self.alarmNL_add_handler)
 
-        self.AddAlarmButton.clicked.connect(self.alarm_add_handler)
+        self.AddAlarmButton.clicked.connect(self.alarmNL_add_handler)
 
         self.get_contents()
         self.get_time_contents()
